@@ -2,6 +2,7 @@
 
 namespace App\Controllers;
 use App\Models\user;
+use App\Models\Userprofile;
 use CodeIgniter\Session\Session;
 class Home extends BaseController
 {
@@ -119,4 +120,32 @@ class Home extends BaseController
     public function toaster(){
         return view('toaster');
     }
+    public function upload()
+    {
+        $file = $this->request->getFile('myPhoto');
+
+        // Check if the file was uploaded successfully
+        if ($file->isValid() && !$file->hasMoved()) {
+            // Generate a unique name for the file
+            $newName = $file->getRandomName();
+
+            // Move the uploaded file to a directory
+            $file->move(ROOTPATH . 'public/assets/uploads', $newName);
+
+            // Save image information in the database
+            $imageModel = new Userprofile();
+            $data = [
+                'user_id' => session('user_id'),
+                'profilename' => $newName,
+            ];
+            $imageModel->insert($data);
+            echo "pass test";
+            return redirect()->to('/dashboard');
+        } else {
+            // Handle file upload error
+            echo "fail test ";
+            return redirect()->to('/dashboard');
+        }
+    }
+
 }

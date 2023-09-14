@@ -12,3 +12,4 @@ $routes->post('/', 'Home::authenticate');
 $routes->get('/dashboard', 'Home::dashboard');
 $routes->get('/logout', 'Home::logout');
 $routes->get('/toaster', 'Home::toaster');
+$routes->post('/image-upload/upload', 'Home::upload');

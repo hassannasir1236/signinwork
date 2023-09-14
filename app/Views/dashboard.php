@@ -39,7 +39,7 @@ echo "Signup page"
           <a class="nav-link disabled" href="#" tabindex="-1" aria-disabled="true">Disabled</a>
         </li>
       </ul>
-      <form class="d-flex">
+      <form class="d-flex" enctype="multipart/form-data">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
         <button class="btn btn-outline-success" type="submit">Search</button>
       </form>
@@ -60,7 +60,7 @@ echo "Signup page"
             <img id="imagePreview" src="<?= base_url()?>/assets/images/profile.jpg" class="card-img-top" alt="...">
             <img id="uploadPreview" class="w-100">
             <div class="card-body">
-                <form action="">
+                <form action="/image-upload/upload" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Default file input example</label>
                         <input class="form-control" id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();">
