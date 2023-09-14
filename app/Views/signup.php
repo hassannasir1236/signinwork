@@ -1,25 +1,54 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Signup Page</title>
-   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
-   <link rel="stylesheet" type="text/css" href="assets/css/style.css">
-   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.css">
-<script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.min.js"></script>
+<!-- Extending the layout -->
+<?= $this->extend('layouts/main') ?>
 
-</head>
-<body>
+<!-- Defining the content section -->
+<?= $this->section('title') ?>
+echo "Signup page"
+<?= $this->endSection() ?>
+<?= $this->section('content') ?>
+<div id="toastr-notifications">
+</div> 
+<style>
+  /* Style the toaster container */
+.toaster {
+    position: fixed;
+    right:0;
+    margin-top:5px;
+    background-color: #4CAF50; /* Green background color */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    display: none; /* Hide it by default */
+}
+
+/* Style the toaster content */
+.toaster-content {
+    text-align: center;
+}
+
+</style>
     <script>
+        
+      <?php if(session()->getFlashdata('success')): ?>
+          toastr.success('<?= session()->getFlashdata('success') ?>');
+      <?php endif; ?>
+      
+ 
+    </script>
+    
+    
+    <!-- Toaster container -->
     <?php if(session()->getFlashdata('success')): ?>
-        toastr.success('<?= session()->getFlashdata('success') ?>');
-    <?php endif; ?>
-</script>
+<div id="toaster" class="toaster">
+    <div class="toaster-content">
+        Registration successful! You can now log in.
+    </div>
+</div>
+<?php endif; ?>
 
     <div class="container vh-100">
-        <div class="row d-flex align-items-center justify-content-center">
+        <div class="row d-flex align-items-center justify-content-center"  style="height:100ch">
             <div class="card w-75 ">
               <div class="card-body row d-flex justify-content-center align-items-center">
               	<div class="col-12 col-md-6">
@@ -27,8 +56,8 @@
                     <form action="<?= base_url('/register') ?>" method="post">
                     	<div class="mb-3">
 		                    <div class="d-flex flex-row-reverse align-items-center input_border">
-		                        <input type="text" class="" id="" name="username" aria-describedby="emailHelp" placeholder="Enter Username">
-		                      <i class="fa-solid fa-user" style="color: #666e7a;"></i>
+		                        <input type="text" class="" id="" name="username" aria-describedby="emailHelp" placeholder="Enter Username" value="<?php if(isset($data)): print_r($data['username']); endif; ?>">
+		                        <i class="fa-solid fa-user" style="color: #666e7a;"></i>
 		                    </div>
                             <?php if (isset($validation)): ?>
                             <?php if ($validation->getError('username')): ?>
@@ -40,7 +69,7 @@
                       	</div>
                       <div class="mb-3">
 	                    <div class="d-flex flex-row-reverse align-items-center input_border">
-	                        <input type="email" class="" id="" name="email" aria-describedby="emailHelp" placeholder="Enter Email">
+	                        <input type="email" class="" id="" name="email" aria-describedby="emailHelp" placeholder="Enter Email" value="<?php if(isset($data)): print_r($data['email']); endif; ?>">
 	                      <i class="fa-solid fa-envelope" style="color: #4d5d7a;"></i>
 	                    </div>
                         <span class="text-danger">
@@ -53,7 +82,7 @@
                       </div>
                       <div class="mb-3">
                         <div class="d-flex flex-row-reverse align-items-center input_border">
-                            <input type="password" class="" name="password" id="exampleInputPassword1" placeholder="Enter Password">
+                            <input type="password" class="" name="password" id="exampleInputPassword1" placeholder="Enter Password" value="<?php if(isset($data)): print_r($data['password']); endif; ?>">
                             <i class="fa-solid fa-lock" style="color: #47546b;"></i>
                         </div>
                         <span class="text-danger">
@@ -66,7 +95,8 @@
                       </div>
                       <div class="mb-3">
 		                    <div class="d-flex flex-row-reverse align-items-center input_border">
-		                        <input type="password" class="" id="" name="confirm_password" aria-describedby="emailHelp" placeholder="Repeat Your Password">
+		                        <input type="password" class="" id="" name="confirm_password" aria-describedby="emailHelp" placeholder="Repeat Your Password" 
+                              value="<?php if(isset($data)): print_r($data['password']); endif; ?>">
 		                      <i class="fa-solid fa-lock" style="color: #47546b;"></i>
 		                    </div>
                             <span class="text-danger">
@@ -79,9 +109,9 @@
                       	</div>
                       <div class="mb-3 form-check">
                         <input type="checkbox" class="form-check-input" id="exampleCheck1">
-                        <label class="form-check-label" style="margin-left: 11px;" for="exampleCheck1">Remember me</label>
+                        <label class="form-check-label" style="margin-left: 11px;" for="exampleCheck1">I agree all statments in<span class="fs-5 fw-bold border-bottom border-dark   border-2"> Term of service</span> </label>
                       </div>
-                      <button type="submit" class="btn" style="background-color: #62e3dd7d;">Sign Up</button>
+                      <button type="submit" class="btn mb-3" style="background-color: #62e3dd7d;">Sign Up</button>
                     </form>
                 </div>
                 <div class="col-12 col-md-6">
@@ -92,7 +122,19 @@
             </div>
         </div>
     </div>
-   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
-   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/js/all.min.js"></script>
-</body>
-</html>
+    <script>
+    // Function to show the toaster
+    function showToast() {
+        var toaster = document.getElementById('toaster');
+        toaster.style.display = 'block';
+
+        setTimeout(function () {
+            toaster.style.display = 'none';
+        }, 6000); // Display for 5 seconds (adjust as needed)
+    }
+
+    // Call the showToast function when the page loads
+    window.onload = showToast;
+</script>
+
+<?= $this->endSection() ?>

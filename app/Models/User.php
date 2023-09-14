@@ -39,4 +39,24 @@ class User extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+
+    public function authenticate($email, $password)
+    {
+        // return $this->where('email', $email)
+        //     ->where('password', $password)
+        //     ->first();
+        
+        $user = $this->where('email', $email)->first();
+
+        if (!$user) {
+            return false; // User not found
+        }
+
+        // Compare the input password (after MD5 hashing) with the stored password
+        if (md5($password) === $user['password']) {
+            return $user; // Authentication successful, return user data
+        }
+
+        return false; // Authentication failed
+    }
 }
