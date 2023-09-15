@@ -109,7 +109,9 @@ class Home extends BaseController
         }
 
         // User is authenticated, load the dashboard view
-        return view('/dashboard');
+        $imageModel = new Userprofile();
+        $imageData = $imageModel->getImageById(session('user_id'));
+        return view('/dashboard', ['imageData' => $imageData]);
     }
 
     public function logout(){
@@ -122,30 +124,76 @@ class Home extends BaseController
     }
     public function upload()
     {
-        $file = $this->request->getFile('myPhoto');
+        // $validation = \Config\Services::validation();
+        helper(['form','url']);
+        $validation = \Config\Services::validation();
+        $this->session = \Config\Services::session();
+        // $check = $this->validate([
+        //     'myPhoto'=>'required',
+        // ]);
+        $validationRules = [
+            'myPhoto' => [
+                'uploaded[myPhoto]',
+                'max_size[myPhoto,2048]', // 2MB
+                'mime_in[myPhoto,image/jpeg,image/png,image/gif]', // Allowed MIME types
+            ],
+        ];
+        
+        $validate=$validation->setRules($validationRules);
+        $imageModel = new Userprofile();
+        $imageData = $imageModel->getImageById(session('user_id'));
+        $this->session->setFlashData('success', 'Sign-up successful!');
+        // $this->validation->setRules($validationRules);
+        if ($validation->withRequest($this->request)->run()) {
+            // Validation passed, the uploaded file is valid.
+                       
+            $file = $this->request->getFile('myPhoto');
 
-        // Check if the file was uploaded successfully
-        if ($file->isValid() && !$file->hasMoved()) {
-            // Generate a unique name for the file
-            $newName = $file->getRandomName();
-
-            // Move the uploaded file to a directory
-            $file->move(ROOTPATH . 'public/assets/uploads', $newName);
-
-            // Save image information in the database
-            $imageModel = new Userprofile();
-            $data = [
-                'user_id' => session('user_id'),
-                'profilename' => $newName,
-            ];
-            $imageModel->insert($data);
-            echo "pass test";
-            return redirect()->to('/dashboard');
+            // Check if the file was uploaded successfully
+            if ($file->isValid() && !$file->hasMoved()) {
+                // Generate a unique name for the file
+                $newName = $file->getRandomName();
+                // Move the uploaded file to a directory
+                $file->move(ROOTPATH . 'public/assets/uploads', $newName);
+                 // Check image exist then update image name
+                 if($imageData){
+                    // $this->load->model('UserProfile');
+                    $file_path = 'assets/Uploads/'.$imageData['profilename']; 
+                    if (file_exists($file_path)) {
+                        unlink($file_path);
+                    }
+                    $id = session('user_id'); 
+                    $data = [
+                        'user_id'=> $id,
+                        'profilename' => $newName, 
+                    ]; 
+                   $updatedata= $imageModel->updateRecord($id, $data);
+                 }else{
+                       // Save image information in the database
+                $imageModel = new Userprofile();
+                $data = [
+                    'user_id' => session('user_id'),
+                    'profilename' => $newName,
+                ];
+                $imageModel->insert($data);
+                 }
+              
+               
+               // return view('/dashboard', ['imageData' => $imageData]);
+               return redirect()->to('/dashboard');
+            } else {
+                // Handle file upload error
+                echo "fail test ";
+                return redirect()->to('/dashboard');
+            }
         } else {
-            // Handle file upload error
-            echo "fail test ";
+            // Validation failed, handle errors here.
+            echo "lkasjflkj";
+            $errors = $validation->getErrors();
+           // return view('/dashboard',['validation'=>$validate,'error'=>$errors,'imageData' => $imageData]);
             return redirect()->to('/dashboard');
         }
+     
     }
 
 }

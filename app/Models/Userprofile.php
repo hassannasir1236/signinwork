@@ -38,4 +38,18 @@ class Userprofile extends Model
     protected $afterFind      = [];
     protected $beforeDelete   = [];
     protected $afterDelete    = [];
+    public function getImageById($id)
+    {
+        return $this->where('user_id',$id)->first();
+    }
+    public function updateRecord($id, $data) {
+        // Your update logic goes here
+        // $this->db->where('user_id', $id);
+        // $this->db->update('Userprofiles', $data);
+        $builder = $this->db->table('Userprofiles');
+        $builder->where('user_id', $id); // Replace 'user_id' and $id with your conditions
+$builder->update($data);
+$builder->set($data);
+$result = $builder->update();
+    }
 }

@@ -7,6 +7,28 @@ echo "Signup page"
 <?= $this->section('cs') ?>
 <link href="https://cdnjs.cloudflare.com/ajax/libs/bulma/0.9.3/css/bulma.min.css">
 <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bulma.min.css">
+<div id="toastr-notifications">
+</div> 
+<style>
+  /* Style the toaster container */
+.toaster {
+    position: fixed;
+    right:0;
+    margin-top:5px;
+    background-color: #4CAF50; /* Green background color */
+    color: #fff;
+    padding: 10px 20px;
+    border-radius: 5px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    display: none; /* Hide it by default */
+}
+
+/* Style the toaster content */
+.toaster-content {
+    text-align: center;
+}
+
+</style>
 <?= $this->endSection() ?>
 <?= $this->section('content') ?>
 
@@ -50,21 +72,42 @@ echo "Signup page"
 </nav>
 
 
-
+<?php if(session()->getFlashdata('success')): ?>
+<div id="toaster" class="toaster">
+    <div class="toaster-content">
+    congratulations, Your Profile is Updated
+    </div>
+</div>
+<?php endif; ?>
 
 
 <div class="container">
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-12 col-sm-12 col-md-4 w-25">
         <div class="card shadow rounded-3" >
-            <img id="imagePreview" src="<?= base_url()?>/assets/images/profile.jpg" class="card-img-top" alt="...">
+        <?php if ($imageData): ?>  
+            <img id="imagePreview" src="assets/Uploads/<?= $imageData['profilename']?>" class="card-img-top" alt="..."> 
             <img id="uploadPreview" class="w-100">
+                   
+        <?php else: ?>
+            <img id="imagePreview" src="<?= base_url()?>/assets/images/profile.jpg" class="card-img-top" alt="...">
+                <img id="uploadPreview" class="w-100">
+        <?php endif; ?>
+           
             <div class="card-body">
                 <form action="/image-upload/upload" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Default file input example</label>
                         <input class="form-control" id="uploadImage" type="file" name="myPhoto" onchange="PreviewImage();">
                     </div>
+                    <?php if (isset($validation)): ?>
+                        
+                            <?php if ($validation->getError('myPhoto')): ?>
+                             <span class="text-danger">
+                                <?= $validation->getError('myPhoto') ?>
+                            </span>
+                             <?php endif; ?>
+                             <?php endif; ?>
                     <input type="submit"  id="imageInput" class="rounded-3 btn btn-primary">
                 </form>
             </div>
@@ -573,6 +616,20 @@ echo "Signup page"
 <script src="https://cdn.datatables.net/1.13.6/js/dataTables.bulma.min.js"></script>
 <script>
     new DataTable('#example');
+</script>
+<script>
+    // Function to show the toaster
+    function showToast() {
+        var toaster = document.getElementById('toaster');
+        toaster.style.display = 'block';
+
+        setTimeout(function () {
+            toaster.style.display = 'none';
+        }, 6000); // Display for 5 seconds (adjust as needed)
+    }
+
+    // Call the showToast function when the page loads
+    window.onload = showToast;
 </script>
 <?= $this->endSection() ?>
 <?= $this->endSection() ?>
