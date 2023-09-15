@@ -207,4 +207,17 @@ class Home extends BaseController
         $this->session->setFlashData('success', 'Sign-up successful!');
         return redirect()->to('/dashboard');
     }
+    public function editpageshow($id)
+    {
+        $user_id = session('user_id');
+        if($user_id){
+            $userRecord = new User();
+          $data=  $userRecord->where('id',$id)->first();
+          
+            return view('/Usereditpage',['data'=>$data]);
+        }else{
+    return redirect('/');
+        }
+        
+    }
 }

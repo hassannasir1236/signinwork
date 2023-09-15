@@ -152,7 +152,7 @@ input {
                     <td><?php echo $user['email']; ?></td>
                     <td><?php echo $user['password']; ?></td>
                     <td class="d-flex">
-                        <a href="" class="btn btn-success rounded-2"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>
+                        <a href="<?=  site_url('user/edit/').$user['id']; ?>" class="btn btn-success rounded-2"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>
                         <form action="<?=  site_url('user/delete/').$user['id']; ?>" method="post">
                             <button type="submit" class="btn btn-danger rounded-2 show_confirm" style="margin-left:3px;">
                             <i class="fa-solid fa-trash" style="color: #f6f7f9;"></i>
@@ -176,6 +176,8 @@ input {
         </div>
     </div>
 </div>
+
+<?= $this->endSection() ?>
 <?= $this->section('js') ?>
 <script type="text/javascript">
 
@@ -206,6 +208,7 @@ input {
    $(document).ready(function() {
     var table = $('#example').DataTable( {
         lengthChange: false,
+        "pageLength": 20,
         buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
     } );
  
@@ -250,5 +253,4 @@ input {
       });
   
 </script>
-<?= $this->endSection() ?>
 <?= $this->endSection() ?>
