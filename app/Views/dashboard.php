@@ -106,11 +106,12 @@ input {
         <div class="col-12 col-sm-12 col-md-4 w-25">
         <div class="card shadow rounded-3" >
         <?php if ($imageData): ?>  
-            <img id="imagePreview" src="assets/Uploads/<?= $imageData['profilename']?>" class="card-img-top" alt="..."> 
+            <img id="imagePreview" src="<?= base_url()?>assets/Uploads/<?= $imageData['profilename']?>" class="card-img-top" alt="..."> 
             <img id="uploadPreview" class="w-100">
-                   
+                  
         <?php else: ?>
-            <img id="imagePreview" src="<?= base_url()?>/assets/images/profile.jpg" class="card-img-top" alt="...">
+            <img id="imagePreview" src="<?= base_url()?>/assets/images/profile.jpg" class="card-img-top">
+           
                 <img id="uploadPreview" class="w-100">
         <?php endif; ?>
            

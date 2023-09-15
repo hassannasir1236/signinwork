@@ -161,7 +161,7 @@ class Home extends BaseController
                 // Move the uploaded file to a directory
                 $file->move(ROOTPATH . 'public/assets/uploads', $newName);
                  // Check image exist then update image name
-                 if($imageData){
+                 if(isset($imageData['profilename'])){
                     // $this->load->model('UserProfile');
                     $file_path = 'assets/Uploads/'.$imageData['profilename']; 
                     if (file_exists($file_path)) {
@@ -213,8 +213,10 @@ class Home extends BaseController
         if($user_id){
             $userRecord = new User();
           $data=  $userRecord->where('id',$id)->first();
-          
-            return view('/Usereditpage',['data'=>$data]);
+             $imageModel = new Userprofile();
+        $imageData = $imageModel->getImageById(session('user_id'));
+       // $image = $imageData['profilename'];
+            return view('/Usereditpage',['data'=>$data,'imageData'=>$imageData]);
         }else{
     return redirect('/');
         }
