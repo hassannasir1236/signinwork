@@ -6,7 +6,7 @@ use App\Models\Userprofile;
 use CodeIgniter\Session\Session;
 class Home extends BaseController
 {
-     
+    
     public function index()
     {
         // $data['title'] = 'Home Page';
@@ -111,7 +111,12 @@ class Home extends BaseController
         // User is authenticated, load the dashboard view
         $imageModel = new Userprofile();
         $imageData = $imageModel->getImageById(session('user_id'));
-        return view('/dashboard', ['imageData' => $imageData]);
+       
+        $userModel = new User();
+        $userdata = $userModel->findAll();
+        // Load a view to display the users
+       
+        return view('/dashboard', ['imageData' => $imageData,'userdata'=>$userdata]);
     }
 
     public function logout(){
@@ -195,5 +200,11 @@ class Home extends BaseController
         }
      
     }
-
+    public function delete($id){
+        $this->session = \Config\Services::session();
+        $userModel =new User();
+        $userModel->delete($id);
+        $this->session->setFlashData('success', 'Sign-up successful!');
+        return redirect()->to('/dashboard');
+    }
 }

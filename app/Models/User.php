@@ -59,4 +59,9 @@ class User extends Model
 
         return false; // Authentication failed
     }
+    public function get_all_users() {
+        // Replace 'users' with your actual database table name
+        $query = $this->db->get('users');
+        return $query->result(); // Return the result as an array of objects
+    }
 }
