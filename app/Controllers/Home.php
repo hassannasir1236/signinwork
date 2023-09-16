@@ -195,6 +195,7 @@ class Home extends BaseController
             // Validation failed, handle errors here.
             echo "lkasjflkj";
             $errors = $validation->getErrors();
+            $this->session->setFlashdata('errors', $errors);
            // return view('/dashboard',['validation'=>$validate,'error'=>$errors,'imageData' => $imageData]);
             return redirect()->to('/dashboard');
         }
@@ -216,10 +217,104 @@ class Home extends BaseController
              $imageModel = new Userprofile();
         $imageData = $imageModel->getImageById(session('user_id'));
        // $image = $imageData['profilename'];
-            return view('/Usereditpage',['data'=>$data,'imageData'=>$imageData]);
+            return view('/Usereditpage',['data'=>$data,'imageData'=>$imageData,'user_id'=>$user_id]);
         }else{
     return redirect('/');
         }
         
+    }
+    public function EditRecord($id){
+         helper(['form','url']);
+        $validation = \Config\Services::validation();
+        $this->session = \Config\Services::session();
+        $check = $this->validate([
+            'username'=>'required',
+            'email'=>'required|valid_email',
+            'password'=>'required',
+              // 'myPhoto' => 'required|uploaded[myPhoto]|max_size[myPhoto,2048]|mime_in[myPhoto,image/jpeg,image/png,image/gif]'
+        ]);
+          $validationRules = [
+            'myPhoto' => [
+                'uploaded[myPhoto]',
+                'max_size[myPhoto,2048]', // 2MB
+                'mime_in[myPhoto,image/jpeg,image/png,image/gif]', // Allowed MIME types
+            ],
+        ];
+        if (!$check) {
+            $dataRecord['username'] =  $this->request->getVar('username');
+            $dataRecord['email'] =  $this->request->getVar('email');
+            $dataRecord['password'] =  $this->request->getVar('password');
+       
+             // return view('Usereditpage',['validation'=>$this->validator,'data'=>$data]);
+                 $userRecord = new User();
+          $data=  $userRecord->where('id',$id)->first();
+             $imageModel = new Userprofile();
+        $imageData = $imageModel->getImageById(session('user_id'));
+       // $image = $imageData['profilename'];
+            // return view('/Usereditpage',['data'=>$data,'imageData'=>$imageData,'validation'=>$this->validator]);
+        return redirect()->back()->withInput()->with('errors', $validation->getErrors());
+        }else {
+           // $encrypter = \Config\Services::enctypter();
+        //    $data['username'] = "";
+        //     $data['email'] =  "";
+        //     $data['password'] =  "";
+        //     $data['confirm_password'] =  "";
+    
+           $model = new User();
+           $data = [
+                'username'=> $this->request->getVar('username'),
+                'email'=> $this->request->getVar('email'),
+                'password'=>md5($this->request->getVar('password'))
+                 //'password'=>   $this->encrypter->encrypt($this->request->getVar('password'))         
+            ];
+           $model->update($id,$data);
+           // $model->where('id', $id);
+           //  $model->update($data);
+        $validate=$validation->setRules($validationRules);
+        $imageModel = new Userprofile();
+        $imageData = $imageModel->getImageById(session('user_id'));
+        $this->session->setFlashData('success', 'Sign-up successful!');
+           if ($validation->withRequest($this->request)->run()) {
+            // Validation passed, the uploaded file is valid.
+                       
+            $file = $this->request->getFile('myPhoto');
+
+            // Check if the file was uploaded successfully
+            if ($file->isValid() && !$file->hasMoved()) {
+                // Generate a unique name for the file
+                $newName = $file->getRandomName();
+                // Move the uploaded file to a directory
+                $file->move(ROOTPATH . 'public/assets/uploads', $newName);
+                 // Check image exist then update image name
+                 if(isset($imageData['profilename'])){
+                    // $this->load->model('UserProfile');
+                    $file_path = 'assets/Uploads/'.$imageData['profilename']; 
+                    if (file_exists($file_path)) {
+                        unlink($file_path);
+                    }
+                    $id = session('user_id'); 
+                    $data = [
+                        'user_id'=> $id,
+                        'profilename' => $newName, 
+                    ]; 
+                   $updatedata= $imageModel->updateRecord($id, $data);
+                 }
+             }
+         }else{
+             $errors = $validation->getErrors();
+             $this->session->setFlashdata('errors', $errors);
+         }
+            
+             $this->session->setFlashData('success', 'Sign-up successful!');
+        //   $this->session->set_flashdata('success', 'Signup successful! You can now log in.');
+        //   $this->session->set_flashdata('message', 'Your form was successfully submitted!');
+        //   Redirect to another page or reload the current page
+      
+             return redirect('dashboard');
+
+
+           //return redirect();
+
+        }
     }
 }

@@ -129,6 +129,16 @@ input {
                             </span>
                              <?php endif; ?>
                              <?php endif; ?>
+                             <?php if (session()->has('errors')): ?>
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        <!-- Iterate through the errors and display them -->
+                                        <?php foreach (session('errors') as $error): ?>
+                                            <li><?= esc($error) ?></li>
+                                        <?php endforeach ?>
+                                    </ul>
+                                </div>
+                            <?php endif ?>
                     <input type="submit"  id="imageInput" class="rounded-3 btn btn-primary">
                 </form>
             </div>

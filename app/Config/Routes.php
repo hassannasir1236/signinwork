@@ -17,6 +17,7 @@ $routes->post('/image-upload/upload', 'Home::upload');
 // Correct route handler with the backslash delimiter
 $routes->post('user/delete/(:num)', '\App\Controllers\Home::delete/$1');
 $routes->get('user/edit/(:num)', '\App\Controllers\Home::editpageshow/$1');
+$routes->post('user/editrecord/(:num)', '\App\Controllers\Home::EditRecord/$1');
 
 // Define a POST route for deleting a record
 //$routes['user/delete/(:num)']['post'] = 'Home/delete/$1';

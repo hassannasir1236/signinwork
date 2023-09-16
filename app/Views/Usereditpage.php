@@ -40,7 +40,7 @@ body{
 body, html {
 padding: 0;
 margin: 0;
-text-align: center;
+/*text-align: center;*/
 }
 
 /* Styles the thumbnail */
@@ -206,25 +206,47 @@ top: 0;
 
 <div class="container d-flex justify-content-center align-items-center"  style="height:100vh;">
     <div class="row d-flex justify-content-center align-items-center">
-        <div class="card rounded-3 shadow" style="width: 38rem;">
+        <div class="card rounded-3 shadow" style="width: 30rem; margin-top: 7rem!important;">
         <h4 class="d-flex justify-content-center align-items-center pt-4">Update Your Profile</h4>
             <div class="card-body  ">
-            <form >
+            <form action="<?=  base_url('/user/editrecord/').$data['id']; ?>" method="post" enctype="multipart/form-data">
                 <div class="mb-3">
+              
                     <label for="exampleInputEmail1" class="form-label">Enter Username</label>
-                    <input type="text" class="form-control col" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?= $data['username'] ?>">
+                    <input type="text" class="form-control col" id="exampleInputEmail1" aria-describedby="emailHelp" name="username" value="<?= $data['username'] ?>">
+                    <?php if (session()->has('errors') && isset(session('errors')['username'])): ?>
+                        <div class="text-danger"><?= session('errors')['username'] ?></div>
+                    <?php endif ?>
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputEmail1" class="form-label">Enter Email</label>
-                    <input type="email" class="form-control col" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?= $data['username'] ?>">
+                    <input type="email" name="email" readonly  class="form-control col" id="exampleInputEmail1" aria-describedby="emailHelp" value="<?= $data['email'] ?>">
+                    <?php if (session()->has('errors') && isset(session('errors')['email'])): ?>
+                        <div class="text-danger"><?= session('errors')['email'] ?></div>
+                    <?php endif ?>
                 </div>
                 <div class="mb-3">
                     <label for="exampleInputPassword1" class="form-label">Password</label>
-                    <input type="password" class="form-control col" id="exampleInputPassword1">
+                    <input type="password" name="password" class="form-control col" id="exampleInputPassword1">
+                   <?php if (session()->has('errors') && isset(session('errors')['password'])): ?>
+                        <div class="text-danger"><?= session('errors')['password'] ?></div>
+                    <?php endif ?>
                 </div>
                 <div class="mb-3">
                     <label for="formFile" class="form-label">Default file input example</label>
-                    <input class="form-control col mb-5" type="file" id="formFile">
+                    <input class="form-control col mb-5" name="myPhoto" type="file" id="formFile">
+                    <?php if (session()->has('errors') && isset(session('errors')['myPhoto'])): ?>
+                        <div class="text-danger"><?= session('errors')['myPhoto'] ?></div>
+                    <?php endif ?>
+                    <div class="alert alert-danger">
+                                    <ul>
+                                        <!-- Iterate through the errors and display them -->
+                                        <?php foreach (session('errors') as $error): ?>
+                                            <li><?= esc($error) ?></li>
+                                        <?php endforeach ?>
+                                    </ul>
+                                </div>
+                            <?php endif ?>
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">
                      
