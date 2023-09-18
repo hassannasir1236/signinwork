@@ -238,15 +238,19 @@ top: 0;
                     <?php if (session()->has('errors') && isset(session('errors')['myPhoto'])): ?>
                         <div class="text-danger"><?= session('errors')['myPhoto'] ?></div>
                     <?php endif ?>
+                    <?php if(session('errors')):?>
                     <div class="alert alert-danger">
                                     <ul>
                                         <!-- Iterate through the errors and display them -->
+                               
                                         <?php foreach (session('errors') as $error): ?>
                                             <li><?= esc($error) ?></li>
-                                        <?php endforeach ?>
+                                        <?php endforeach; ?>
+                                      
                                     </ul>
                                 </div>
-                            <?php endif ?>
+                      <?php endif; ?>
+                              
                 </div>
                 <div class="col d-flex justify-content-center align-items-center">
                      
