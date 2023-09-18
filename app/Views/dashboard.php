@@ -105,7 +105,6 @@ input {
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-12 col-sm-12 col-md-4 w-25">
         <div class="card shadow rounded-3" >
-                <button id="fetchButton">Fetch Data</button>
         <?php if ($imageData): ?>  
             <img id="imagePreview" src="<?= base_url()?>assets/Uploads/<?= $imageData['profilename']?>" class="card-img-top" alt="..."> 
             <img id="uploadPreview" class="w-100">
@@ -117,6 +116,7 @@ input {
         <?php endif; ?>
            
             <div class="card-body">
+
                 <form action="/image-upload/upload" method="post" enctype="multipart/form-data">
                     <div class="mb-3">
                         <label for="formFile" class="form-label">Default file input example</label>
@@ -146,14 +146,14 @@ input {
         </div>
         </div>
         <div class="col-12 col-sm-12 col-md-8">
+            <button class="btn btn-info m-4 " id="fetchButton">Fetch Data</button>
         <table id="example" class="table is-striped" style="width:100%">
             <thead>
                 <tr>
                     <th>id</th>
                     <th>User Name</th>
                     <th>Email</th>
-                    <th>Password</th>
-                    <th>Action</th>
+                    <th class="text-center">Action</th>
                 </tr>
             </thead>
             <tbody  id="dataList">
@@ -162,7 +162,6 @@ input {
                     <td><?php echo $user['id']; ?></td>
                     <td><?php echo $user['username']; ?></td>
                     <td><?php echo $user['email']; ?></td>
-                    <td><?php echo $user['password']; ?></td>
                     <td class="d-flex">
                         <a href="<?=  site_url('user/edit/').$user['id']; ?>" class="btn btn-success rounded-2"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>
                         <form action="<?=  site_url('user/delete/').$user['id']; ?>" method="post">
@@ -180,8 +179,7 @@ input {
                 <th>id</th>
                     <th>User Name</th>
                     <th>Email</th>
-                    <th>Password</th>
-                    <th>Action</th>
+                    <th class="text-center">Action</th>
                 </tr>
             </tfoot>
         </table>
@@ -216,7 +214,7 @@ input {
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.print.min.js"></script>
 <script src="https://cdn.datatables.net/buttons/2.4.1/js/buttons.colVis.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/sweetalert/2.1.0/sweetalert.min.js"></script>
-<script>
+<!-- <script>
    $(document).ready(function() {
     var table = $('#example').DataTable( {
         lengthChange: false,
@@ -225,10 +223,9 @@ input {
     } );
  
     // Insert at the top left of the table
-    table.buttons().container()
-        .appendTo( $('div.column.is-half', table.table().container()).eq(0) );
+ table.buttons().container().appendTo( $('div.column.is-half', table.table().container()).eq(0));
 } );
-</script>
+</script> -->
 <script>
     // Function to show the toaster
     function showToast() {
@@ -246,8 +243,15 @@ input {
 <!-- ajax ddata fetch -->
 <script>
         $(document).ready(function() {
+              var table = $('#example').DataTable( {
+        lengthChange: false,
+        "pageLength": 3,
+        buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
+    } );
+ table.buttons().container().appendTo( $('div.column.is-half', table.table().container()).eq(0));
             $('#fetchButton').click(function() {
                 // Make an Ajax request to fetch data
+               
                 $.ajax({
                     url: '<?php echo base_url('fetch'); ?>',
                     method: 'GET',
@@ -259,15 +263,14 @@ input {
                         dataList.empty(); // Clear existing data
                         if (typeof response !== 'undefined') {
                         $.each(response.students, function(index, item) {
-                            dataList.append('<tr>');
-                            dataList.append('<td>' + item.id + '</td>');
-                            dataList.append('<td>' + item.username + '</td>');
-                            dataList.append('<td>' + item.email + '</td>');
-                            dataList.append('<td>' + item.password + '</td>');
-                            dataList.append('<td class="d-flex justify-content-center align-items-center"><a href="user/edit/'+item.id+'" class="btn btn-success bg-success rounded-2"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>                  <form class="show_confirm" action="/user/delete/' + item.id + 
-                                '"method="post"><button type="submit" class="btn btn-danger rounded-2 show_confirm" style="margin-left:3px;"><i class="fa-solid fa-trash" style="color: #f6f7f9;"></i></button></form></td>');
+                            // dataList.append('');
+                            // dataList.append('' + + '</td>');
+                            // dataList.append('' +  + '');
+                            // dataList.append(''  '</td>');
+                            dataList.append('<tr><td>'+item.id +'</td><td>'+item.username+'</td><td>'+ item.email +'</td><td class="d-flex justify-content-center align-items-center"><a href="user/edit/'+item.id+'" class="btn btn-success bg-success rounded-2"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>                  <form class="show_confirm" action="/user/delete/' + item.id + 
+                                '"method="post"><button type="submit" class="btn btn-danger rounded-2 show_confirm" style="margin-left:3px;"><i class="fa-solid fa-trash" style="color: #f6f7f9;"></i></button></form></td></tr>');
                             // dataList.append('<td> </td>');
-                            dataList.append('</tr>');
+                            // dataList.append('');
 
                             // Replace 'field_name' with the actual field name you want to display
                         });
