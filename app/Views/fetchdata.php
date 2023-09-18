@@ -38,6 +38,7 @@
                         console.warn(response.students);
                         var dataList = $('#dataList');
                         dataList.empty(); // Clear existing data
+                        if (typeof response !== 'undefined') {
                         $.each(response.students, function(index, item) {
                             dataList.append('<tr>');
                             dataList.append('<td>' + item.id + '</td>');
@@ -47,8 +48,13 @@
                             dataList.append('</tr>');
                             // Replace 'field_name' with the actual field name you want to display
                         });
-                    },
+                    } else {
+                        console.error('Invalid or undefined data received in the response.');
+                    }
+                      
+                    }, 
                     error: function(xhr, textStatus, errorThrown) {
+                        alert("error");
                         console.error('Ajax request failed:', textStatus, errorThrown);
                     }
                 });

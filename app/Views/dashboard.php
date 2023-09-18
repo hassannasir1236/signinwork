@@ -105,6 +105,7 @@ input {
     <div class="row d-flex justify-content-center align-items-center">
         <div class="col-12 col-sm-12 col-md-4 w-25">
         <div class="card shadow rounded-3" >
+                <button id="fetchButton">Fetch Data</button>
         <?php if ($imageData): ?>  
             <img id="imagePreview" src="<?= base_url()?>assets/Uploads/<?= $imageData['profilename']?>" class="card-img-top" alt="..."> 
             <img id="uploadPreview" class="w-100">
@@ -155,8 +156,8 @@ input {
                     <th>Action</th>
                 </tr>
             </thead>
-            <tbody>
-            <?php foreach ($userdata as $user): ?>
+            <tbody  id="dataList">
+            <!-- <?php foreach ($userdata as $user): ?>
                 <tr>
                     <td><?php echo $user['id']; ?></td>
                     <td><?php echo $user['username']; ?></td>
@@ -172,7 +173,7 @@ input {
                        
                     </td>
                 </tr>
-                <?php endforeach; ?>
+                <?php endforeach; ?> -->
             </tbody>
             <tfoot>
                 <tr>
@@ -242,6 +243,64 @@ input {
     // Call the showToast function when the page loads
     window.onload = showToast;
 </script>
+<!-- ajax ddata fetch -->
+<script>
+        $(document).ready(function() {
+            $('#fetchButton').click(function() {
+                // Make an Ajax request to fetch data
+                $.ajax({
+                    url: '<?php echo base_url('fetch'); ?>',
+                    method: 'GET',
+                    success: function(response) {
+                        // Handle the JSON response (data) and populate the data list
+                        // alert("kjsdaf");
+                        console.warn(response.students);
+                        var dataList = $('#dataList');
+                        dataList.empty(); // Clear existing data
+                        if (typeof response !== 'undefined') {
+                        $.each(response.students, function(index, item) {
+                            dataList.append('<tr>');
+                            dataList.append('<td>' + item.id + '</td>');
+                            dataList.append('<td>' + item.username + '</td>');
+                            dataList.append('<td>' + item.email + '</td>');
+                            dataList.append('<td>' + item.password + '</td>');
+                            dataList.append('<td class="d-flex justify-content-center align-items-center"><a href="user/edit/'+item.id+'" class="btn btn-success bg-success rounded-2"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>                  <form class="show_confirm" action="/user/delete/' + item.id + 
+                                '"method="post"><button type="submit" class="btn btn-danger rounded-2 show_confirm" style="margin-left:3px;"><i class="fa-solid fa-trash" style="color: #f6f7f9;"></i></button></form></td>');
+                            // dataList.append('<td> </td>');
+                            dataList.append('</tr>');
+
+                            // Replace 'field_name' with the actual field name you want to display
+                        });
+                         $('.show_confirm').click(function(event) {
+          var form =  $(this).closest("form");
+          var name = $(this).data("name");
+          event.preventDefault();
+          swal({
+              title: `Are you sure you want to delete this record?`,
+              text: "If you delete this, it will be gone forever.",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              form.submit();
+            }
+          });
+      });
+                    } else {
+                        console.error('Invalid or undefined data received in the response.');
+                    }
+                      
+                    }, 
+                    error: function(xhr, textStatus, errorThrown) {
+                        alert("error");
+                        console.error('Ajax request failed:', textStatus, errorThrown);
+                    }
+                });
+            });
+        });
+    </script>
 <!-- Confirmation delete pop scripte -->
 <script type="text/javascript">
  
@@ -264,4 +323,5 @@ input {
       });
   
 </script>
+
 <?= $this->endSection() ?>
