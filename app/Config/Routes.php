@@ -18,6 +18,14 @@ $routes->post('/image-upload/upload', 'Home::upload');
 $routes->post('user/delete/(:num)', '\App\Controllers\Home::delete/$1');
 $routes->get('user/edit/(:num)', '\App\Controllers\Home::editpageshow/$1');
 $routes->post('user/editrecord/(:num)', '\App\Controllers\Home::EditRecord/$1');
+// application/config/routes.php
+ $routes->view('/fetch-data','fetchdata');
+$routes->get('/fetch', 'Home::fetch_data');
+// application/config/routes.php
+
+// $route['fetch-data'] = 'Home/getAllUsers';
+
+// $route['fetch-data'] = 'Home/fetch_data';
 
 // Define a POST route for deleting a record
 //$routes['user/delete/(:num)']['post'] = 'Home/delete/$1';

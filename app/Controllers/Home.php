@@ -317,4 +317,21 @@ class Home extends BaseController
 
         }
     }
+     public function fetch_data() {
+        // Fetch data from the database
+        $userModel = new User();
+        $data['students']= $userModel->findAll();
+        // $data['jsonData'] = json_encode($data);
+        // $data = $this->DataModel->get_data();
+
+        // // Return the data as JSON
+        // header('Content-Type: application/json');
+        // echo json_encode($data);
+    //    return  $this->response->setJSON($data);
+        // Print_r($data);
+        // $this->output
+        //     ->set_content_type('application/json')
+        //     ->set_output(json_encode($data));
+        return $this->response->setJSON($data);
+    }
 }
