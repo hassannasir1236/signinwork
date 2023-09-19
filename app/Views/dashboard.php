@@ -240,11 +240,68 @@ input {
     // Call the showToast function when the page loads
     window.onload = showToast;
 </script>
-<!-- ajax ddata fetch -->
 <script>
+    $('#fetchButton').click(function() {
+    new DataTable('#example', {
+    ajax: '<?php echo base_url('fetch'); ?>',
+    columns: [
+        { data: 'id' },
+        { data: 'username' },
+        { data: 'email' },
+        {
+                // Create a column for action buttons
+                data: null, // Use null as the data source because buttons are custom
+                render: function(data, type, full, meta) {
+                    return '<a href="<?=  site_url('user/edit/')?>' + data.id + '" class="btn btn-primary btn-edit" data-id="' + data.id + '"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>' +
+                           '<form  class="show_confirm" action="<?=  site_url('user/delete/') ?>' + data.id + '" method="post"><button class="btn btn-danger btn-delete show_confirm" data-id="' + data.id + '"><i class="fa-solid fa-trash" style="color: #f6f7f9;"></i></button></form>';
+                }
+            }
+        
+    ],
+    processing: true,
+});
+});
+$(document).on('click', '.show_confirm', function() {
+    var form =  $(this).closest("form");
+          var name = $(this).data("name");
+          event.preventDefault();
+          swal({
+              title: `Are you sure you want to delete this record?`,
+              text: "If you delete this, it will be gone forever.",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              form.submit();
+            }
+          });
+});
+$('.show_confirm').click(function(event) {
+          var form =  $(this).closest("form");
+          var name = $(this).data("name");
+          event.preventDefault();
+          swal({
+              title: `Are you sure you want to delete this record?`,
+              text: "If you delete this, it will be gone forever.",
+              icon: "warning",
+              buttons: true,
+              dangerMode: true,
+          })
+          .then((willDelete) => {
+            if (willDelete) {
+              form.submit();
+            }
+          });
+      });
+  
+</script>
+<!-- ajax ddata fetch -->
+<!-- <script>
         $(document).ready(function() {
               var table = $('#example').DataTable( {
-        lengthChange: false,
+        lengthChange: true,
         "pageLength": 3,
         buttons: [ 'copy', 'excel', 'pdf', 'colvis' ]
     } );
@@ -303,7 +360,7 @@ input {
                 });
             });
         });
-    </script>
+</script> -->
 <!-- Confirmation delete pop scripte -->
 <script type="text/javascript">
  

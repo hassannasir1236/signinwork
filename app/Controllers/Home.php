@@ -320,7 +320,7 @@ class Home extends BaseController
      public function fetch_data() {
         // Fetch data from the database
         $userModel = new User();
-        $data['students']= $userModel->findAll();
+        $data['data']= $userModel->findAll();
         // $data['jsonData'] = json_encode($data);
         // $data = $this->DataModel->get_data();
 
