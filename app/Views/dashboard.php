@@ -9,7 +9,10 @@ echo "Signup page"
 <link href="https://cdn.datatables.net/1.13.6/css/dataTables.bulma.min.css">
 <link href="https://cdn.datatables.net/buttons/2.4.1/css/buttons.bulma.min.css">
 <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
-<link href="">
+<link rel="stylesheet" type="text/css" href="https://cdn.jsdelivr.net/npm/sweetalert2@10">
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@10"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+
 
 <div id="toastr-notifications">
 </div> 
@@ -253,7 +256,7 @@ input {
                 data: null, // Use null as the data source because buttons are custom
                 render: function(data, type, full, meta) {
                     return '<a href="<?=  site_url('user/edit/')?>' + data.id + '" class="btn btn-primary btn-edit" data-id="' + data.id + '"><i class="fa-solid fa-pen-to-square" style="color: #f6f7f9;"></i></a>' +
-                           '<form  class="show_confirm" action="<?=  site_url('user/delete/') ?>' + data.id + '" method="post"><button class="btn btn-danger btn-delete show_confirm" data-id="' + data.id + '"><i class="fa-solid fa-trash" style="color: #f6f7f9;"></i></button></form>';
+                    '<button class="btn btn-danger btn-delete" data-id="' + data.id + '"><i class="fa-solid fa-trash" style="color: #f6f7f9;"></i></button>';
                 }
             }
         
@@ -261,40 +264,79 @@ input {
     processing: true,
 });
 });
-$(document).on('click', '.show_confirm', function() {
-    var form =  $(this).closest("form");
-          var name = $(this).data("name");
-          event.preventDefault();
-          swal({
-              title: `Are you sure you want to delete this record?`,
-              text: "If you delete this, it will be gone forever.",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              form.submit();
-            }
-          });
+$(document).on('click', '.btn-delete', function() {
+    var id = $(this).data('id');
+    var row = $(this).closest('tr'); 
+    Swal.fire({
+        title: 'Are you sure?',
+        text: 'You won\'t be able to revert this!',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Yes, delete it!',
+        cancelButtonText: 'No, cancel!',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // Proceed with the delete operation (e.g., send an AJAX request to delete the record)
+            $.ajax({
+                url: '<?=  site_url('user/delete/') ?>' + id,
+                type: 'POST',
+                success: function(response) {
+                    // Handle success response (e.g., reload the DataTable)
+                  
+                    if (response.success) {
+                        // Remove the row from the DataTable's display
+                        alert("delete");
+                        $(ctl).parents("tr").remove();
+                        row.remove();
+                        Swal.fire('Deleted!', 'The record has been deleted.', 'success');
+                    } else {
+                        row.remove();
+                        Swal.fire('Deleted!', 'The record has been deleted.', 'success');
+                    }
+                },
+                error: function(xhr, status, error) {
+                    Swal.fire('Error!', 'error.', 'error');
+                    console.error('Delete request failed:', error);
+                }
+            });
+        }
+    });
 });
-$('.show_confirm').click(function(event) {
-          var form =  $(this).closest("form");
-          var name = $(this).data("name");
-          event.preventDefault();
-          swal({
-              title: `Are you sure you want to delete this record?`,
-              text: "If you delete this, it will be gone forever.",
-              icon: "warning",
-              buttons: true,
-              dangerMode: true,
-          })
-          .then((willDelete) => {
-            if (willDelete) {
-              form.submit();
-            }
-          });
-      });
+
+// $(document).on('click', '.show_confirm', function() {
+//     var form =  $(this).closest("form");
+//           var name = $(this).data("name");
+//           event.preventDefault();
+//           swal({
+//               title: `Are you sure you want to delete this record?`,
+//               text: "If you delete this, it will be gone forever.",
+//               icon: "warning",
+//               buttons: true,
+//               dangerMode: true,
+//           })
+//           .then((willDelete) => {
+//             if (willDelete) {
+//               form.submit();
+//             }
+//           });
+// });
+// $('.show_confirm').click(function(event) {
+//           var form =  $(this).closest("form");
+//           var name = $(this).data("name");
+//           event.preventDefault();
+//           swal({
+//               title: `Are you sure you want to delete this record?`,
+//               text: "If you delete this, it will be gone forever.",
+//               icon: "warning",
+//               buttons: true,
+//               dangerMode: true,
+//           })
+//           .then((willDelete) => {
+//             if (willDelete) {
+//               form.submit();
+//             }
+//           });
+//       });
   
 </script>
 <!-- ajax ddata fetch -->

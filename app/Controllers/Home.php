@@ -204,9 +204,13 @@ class Home extends BaseController
     public function delete($id){
         $this->session = \Config\Services::session();
         $userModel =new User();
-        $userModel->delete($id);
+       $success= $userModel->delete($id);
         $this->session->setFlashData('success', 'Sign-up successful!');
-        return redirect()->to('/dashboard');
+        if ($success) {
+            echo json_encode(array('success' => true));
+        } else {
+            echo json_encode(array('success' => false));
+        }
     }
     public function editpageshow($id)
     {
